@@ -1,7 +1,14 @@
 # Brownstone Heating & Air — Claude Instructions
 
-## Auto-push preference
-After making any code edits, always commit and push the changes to the working branch, then open a PR — do this automatically without waiting for the user to ask.
+## Auto-deploy preference
+After making any code edits, always do ALL steps without stopping or asking:
+1. Commit the changes
+2. Push to the working branch
+3. Open a PR
+4. Merge the PR into main
+5. Confirm deployment is triggered
+
+Never stop at an intermediate step — always see changes through to deployed/live.
 
 ## Business info
 - Company: Brownstone Heating & Air (HVAC, Brooklyn NY)
