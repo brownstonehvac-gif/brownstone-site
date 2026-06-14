@@ -40,24 +40,31 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "HVACBusiness",
+      "@type": ["HVACBusiness", "LocalBusiness"],
       "@id": "https://brownstoneheatingac.com/#business",
       "name": "Brownstone Heating & Air Conditioning",
-      "telephone": "+1-347-956-4393",
+      "telephone": "+1-347-997-3360",
       "url": "https://brownstoneheatingac.com",
       "image": "https://brownstoneheatingac.com/og-image.jpg",
       "logo": "https://brownstoneheatingac.com/logo.png",
+      "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
+        "streetAddress": "2920 Avenue R, Suite 237",
         "addressLocality": "Brooklyn",
         "addressRegion": "NY",
-        "postalCode": "11201",
+        "postalCode": "11229",
         "addressCountry": "US"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 40.6782,
-        "longitude": -73.9442
+        "latitude": 40.6125,
+        "longitude": -73.9447
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "59"
       },
       "areaServed": [
         { "@type": "City", "name": "Brooklyn" },
@@ -74,12 +81,17 @@
         },
         {
           "@type": "OpeningHoursSpecification",
-          "dayOfWeek": "Sunday",
-          "opens": "00:00",
-          "closes": "23:59"
+          "dayOfWeek": ["Sunday"],
+          "opens": "09:00",
+          "closes": "15:00"
         }
       ],
-      "priceRange": "$$"
+      "sameAs": [
+        "https://www.facebook.com/brownstoneheatingac",
+        "https://www.instagram.com/brownstoneheatingac",
+        "https://www.yelp.com/biz/brownstone-heating-and-air-conditioning-brooklyn-3",
+        "https://www.thumbtack.com/ny/brooklyn/central-air-conditioning-repair/brownstone-heating-air-conditioning-llc/service/211093323998258427"
+      ]
     }
     </script>
     <script type="module" crossorigin src="/assets/index-CJ6NdyYL.js"></script>
