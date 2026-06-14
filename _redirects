@@ -1,14 +1,29 @@
-# Redirect old WordPress URLs so Google doesn't land on the React 404 page (which sets noindex)
-/about-us             /about/                              301
-/about-us/            /about/                              301
-/gallery              /                                    301
-/gallery/             /                                    301
-/home                 /                                    301
-/home/                /                                    301
-/privacy-policy-2     /privacy-policy/                     301
-/privacy-policy-2/    /privacy-policy/                     301
-/ac-repair-bay-ridge  /ac-repair-brooklyn/                 301
-/ac-repair-bay-ridge/ /ac-repair-brooklyn/                 301
+# ============================================================
+# REDIRECT RULES — DO NOT MODIFY WITHOUT UNDERSTANDING BELOW
+# ============================================================
+#
+# HISTORY: The catch-all /* rule has been broken and re-added
+# multiple times, causing infinite redirect loops each time.
+# The pattern: /* in this file + other redirect rules = loops.
+#
+# RULES:
+# 1. NEVER add /* (catch-all) to this file — it breaks everything.
+#    The SPA fallback lives in netlify.toml as the LAST rule.
+# 2. Use 301! (forced) redirects — plain 301 can loop if Netlify
+#    re-evaluates the destination against remaining rules.
+# 3. NEVER remove these redirects without checking Google Search
+#    Console — they exist to fix noindex exclusions on old URLs.
+# ============================================================
 
-# SPA fallback
-/*    /index.html   200
+# Old WordPress URLs — without 301! these hit the React 404 page
+# which sets noindex, causing Google to exclude them from search.
+/about-us             /about/                              301!
+/about-us/            /about/                              301!
+/gallery              /                                    301!
+/gallery/             /                                    301!
+/home                 /                                    301!
+/home/                /                                    301!
+/privacy-policy-2     /privacy-policy/                     301!
+/privacy-policy-2/    /privacy-policy/                     301!
+/ac-repair-bay-ridge  /ac-repair-brooklyn/                 301!
+/ac-repair-bay-ridge/ /ac-repair-brooklyn/                 301!
