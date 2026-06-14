@@ -15,15 +15,39 @@
 #    Console — they exist to fix noindex exclusions on old URLs.
 # ============================================================
 
-# Old WordPress URLs — without 301! these hit the React 404 page
-# which sets noindex, causing Google to exclude them from search.
-/about-us             /about/                              301!
-/about-us/            /about/                              301!
-/gallery              /                                    301!
-/gallery/             /                                    301!
-/home                 /                                    301!
-/home/                /                                    301!
-/privacy-policy-2     /privacy-policy/                     301!
-/privacy-policy-2/    /privacy-policy/                     301!
-/ac-repair-bay-ridge  /ac-repair-brooklyn/                 301!
-/ac-repair-bay-ridge/ /ac-repair-brooklyn/                 301!
+# ---- Old WordPress site pages (no longer exist in current site) ----
+
+/about-us                           /about/                                          301!
+/about-us/                          /about/                                          301!
+/gallery                            /                                                301!
+/gallery/                           /                                                301!
+/home                               /                                                301!
+/home/                              /                                                301!
+/privacy-policy-2                   /privacy-policy/                                 301!
+/privacy-policy-2/                  /privacy-policy/                                 301!
+
+# ---- Old neighborhood/area service pages → general service pages ----
+
+/ac-repair-bay-ridge                /ac-repair-brooklyn/                             301!
+/ac-repair-bay-ridge/               /ac-repair-brooklyn/                             301!
+/ac-repair-williamsburg             /ac-repair-brooklyn/                             301!
+/ac-repair-williamsburg/            /ac-repair-brooklyn/                             301!
+/ac-repair-park-slope               /ac-repair-brooklyn/                             301!
+/ac-repair-park-slope/              /ac-repair-brooklyn/                             301!
+/ac-repair-carroll-gardens          /ac-repair-brooklyn/                             301!
+/ac-repair-carroll-gardens/         /ac-repair-brooklyn/                             301!
+/ac-repair-cobble-hill              /ac-repair-brooklyn/                             301!
+/ac-repair-cobble-hill/             /ac-repair-brooklyn/                             301!
+
+# ---- Old brand/service pages → closest current equivalent ----
+
+/carrier-hvac-repair-brooklyn       /hvac-repair-brooklyn/                           301!
+/carrier-hvac-repair-brooklyn/      /hvac-repair-brooklyn/                           301!
+/daikin-mini-split-repair-brooklyn  /mini-split-repair-brooklyn/                     301!
+/daikin-mini-split-repair-brooklyn/ /mini-split-repair-brooklyn/                     301!
+/hvac-installation-brooklyn         /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
+/hvac-installation-brooklyn/        /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
+/maintenance-plans                  /financing-brooklyn/                             301!
+/maintenance-plans/                 /financing-brooklyn/                             301!
+/emergency-ac-brooklyn              /emergency-ac-repair-brooklyn/                   301!
+/emergency-ac-brooklyn/             /emergency-ac-repair-brooklyn/                   301!
