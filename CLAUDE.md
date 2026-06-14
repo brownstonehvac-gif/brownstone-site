@@ -11,7 +11,10 @@ After making any code edits, always do ALL steps without stopping or asking:
 Never stop at an intermediate step — always see changes through to deployed/live.
 
 ## Business info
-- Company: Brownstone Heating & Air (HVAC, Brooklyn NY)
+- Company: Brownstone Heating & Air Conditioning (HVAC, Brooklyn NY)
+- Phone: (347) 997-3360 / tel:+13479973360
+- Email: brownstonehvac@gmail.com
+- Address (schema only, never display in UI): 2920 Avenue R, Suite 237, Brooklyn, NY 11229
 - Repo: brownstonehvac-gif/brownstone-site
 - Default working branch: `main`
 - Active feature branch pattern: `claude/...`
@@ -19,7 +22,10 @@ Never stop at an intermediate step — always see changes through to deployed/li
 ## Hours
 - Mon–Fri: Open 24 hours (00:00–23:59)
 - Saturday: Closed
-- Sunday: Open 24 hours (00:00–23:59)
+- Sunday: 9 AM–3 PM (09:00–15:00)
+
+## FORBIDDEN phone numbers — never use these anywhere
+347-956-4393, 347-919-9711, 347-835-5034, 347-507-2749, 347-745-7863, 347-830-7915, 347-345-2891, 347-507-2757, 347-809-6117, 516-286-8008
 
 ## Integrations connected
 - GitHub: brownstonehvac-gif/brownstone-site
