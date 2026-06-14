@@ -1,1 +1,14 @@
+# Redirect old WordPress URLs so Google doesn't land on the React 404 page (which sets noindex)
+/about-us             /about/                              301
+/about-us/            /about/                              301
+/gallery              /                                    301
+/gallery/             /                                    301
+/home                 /                                    301
+/home/                /                                    301
+/privacy-policy-2     /privacy-policy/                     301
+/privacy-policy-2/    /privacy-policy/                     301
+/ac-repair-bay-ridge  /ac-repair-brooklyn/                 301
+/ac-repair-bay-ridge/ /ac-repair-brooklyn/                 301
+
+# SPA fallback
 /*    /index.html   200
