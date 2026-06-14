@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+
+# SPA fallback — MUST live here, NOT in _redirects.
+# Putting /* in _redirects alongside other redirect rules causes infinite loops.
+# See _redirects header comment for full history.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
