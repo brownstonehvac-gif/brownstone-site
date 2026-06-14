@@ -51,3 +51,64 @@
 /maintenance-plans/                 /financing-brooklyn/                             301!
 /emergency-ac-brooklyn              /emergency-ac-repair-brooklyn/                   301!
 /emergency-ac-brooklyn/             /emergency-ac-repair-brooklyn/                   301!
+
+# ---- Old neighborhood AC pages → /ac-repair-brooklyn/ ----
+
+/ac-repair-bedford-stuyvesant       /ac-repair-brooklyn/                             301!
+/ac-repair-bedford-stuyvesant/      /ac-repair-brooklyn/                             301!
+/ac-repair-fort-greene              /ac-repair-brooklyn/                             301!
+/ac-repair-fort-greene/             /ac-repair-brooklyn/                             301!
+/ac-repair-brooklyn-heights         /ac-repair-brooklyn/                             301!
+/ac-repair-brooklyn-heights/        /ac-repair-brooklyn/                             301!
+/ac-repair-prospect-heights         /ac-repair-brooklyn/                             301!
+/ac-repair-prospect-heights/        /ac-repair-brooklyn/                             301!
+/ac-repair-boerum-hill              /ac-repair-brooklyn/                             301!
+/ac-repair-boerum-hill/             /ac-repair-brooklyn/                             301!
+/ac-repair-bushwick                 /ac-repair-brooklyn/                             301!
+/ac-repair-bushwick/                /ac-repair-brooklyn/                             301!
+/ac-repair-gowanus                  /ac-repair-brooklyn/                             301!
+/ac-repair-gowanus/                 /ac-repair-brooklyn/                             301!
+/ac-repair-greenpoint               /ac-repair-brooklyn/                             301!
+/ac-repair-greenpoint/              /ac-repair-brooklyn/                             301!
+/ac-repair-crown-heights            /ac-repair-brooklyn/                             301!
+/ac-repair-crown-heights/           /ac-repair-brooklyn/                             301!
+
+# ---- Old AC symptom/cost pages → /ac-repair-brooklyn/ ----
+
+/ac-not-cooling-brooklyn            /ac-repair-brooklyn/                             301!
+/ac-not-cooling-brooklyn/           /ac-repair-brooklyn/                             301!
+/ac-leaking-water-brooklyn          /ac-repair-brooklyn/                             301!
+/ac-leaking-water-brooklyn/         /ac-repair-brooklyn/                             301!
+/ac-leak-detection-brooklyn         /ac-repair-brooklyn/                             301!
+/ac-leak-detection-brooklyn/        /ac-repair-brooklyn/                             301!
+/ac-repair-cost-brooklyn            /ac-repair-brooklyn/                             301!
+/ac-repair-cost-brooklyn/           /ac-repair-brooklyn/                             301!
+
+# ---- Old mini split pages → /mini-split-repair-brooklyn/ ----
+
+/mitsubishi-mini-split-repair-brooklyn  /mini-split-repair-brooklyn/                 301!
+/mitsubishi-mini-split-repair-brooklyn/ /mini-split-repair-brooklyn/                 301!
+/mini-split-not-working-brooklyn    /mini-split-repair-brooklyn/                     301!
+/mini-split-not-working-brooklyn/   /mini-split-repair-brooklyn/                     301!
+/mini-split-deep-cleaning           /mini-split-repair-brooklyn/                     301!
+/mini-split-deep-cleaning/          /mini-split-repair-brooklyn/                     301!
+/mini-split-installation-cost-brooklyn  /mini-split-repair-brooklyn/                 301!
+/mini-split-installation-cost-brooklyn/ /mini-split-repair-brooklyn/                 301!
+
+# ---- Old heating/boiler/furnace pages → /hvac-repair-brooklyn/ ----
+
+/furnace-not-turning-on-brooklyn    /hvac-repair-brooklyn/                           301!
+/furnace-not-turning-on-brooklyn/   /hvac-repair-brooklyn/                           301!
+/boiler-not-heating-brooklyn        /hvac-repair-brooklyn/                           301!
+/boiler-not-heating-brooklyn/       /hvac-repair-brooklyn/                           301!
+/boiler-repair-brooklyn             /hvac-repair-brooklyn/                           301!
+/boiler-repair-brooklyn/            /hvac-repair-brooklyn/                           301!
+/smart-thermostat-brooklyn          /hvac-repair-brooklyn/                           301!
+/smart-thermostat-brooklyn/         /hvac-repair-brooklyn/                           301!
+
+# ---- Old install/replacement pages → upgrades/replacement page ----
+
+/boiler-replacement-brooklyn        /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
+/boiler-replacement-brooklyn/       /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
+/heat-pump-installation-brooklyn    /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
+/heat-pump-installation-brooklyn/   /hvac-heating-ac-upgrades-replacement-brooklyn/  301!
