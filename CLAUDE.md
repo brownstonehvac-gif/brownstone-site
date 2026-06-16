@@ -1,5 +1,12 @@
 # Brownstone Heating & Air — Claude Instructions
 
+## Pre-edit checklist (site & ads)
+Before making any edit to the site or ads, always answer both of these out loud first:
+1. Will this edit screw things up?
+2. Is this the correct move for SEO ranking?
+
+Do not proceed until both questions are addressed.
+
 ## Auto-deploy preference
 After making any code edits, always do ALL steps without stopping or asking:
 1. Commit the changes
