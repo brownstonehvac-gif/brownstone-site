@@ -71,3 +71,18 @@ NOTE: brownstoneheatingac.com is a secondary domain; brownstoneheatingandaircond
 
 ## When asked to "scan the site"
 Fetch sitemap.xml first → list every URL → fetch each one → report findings as table: URL | Issue | Severity | Suggested fix
+
+## How to start a new session correctly
+When starting a fresh Claude Code chat, use this prompt:
+
+> I'm working on my HVAC business website. Use repo `brownstonehvac-gif/brownstone-boost-design` — this is the live site connected to Lovable and Netlify. Do NOT use `brownstonehvac-gif/brownstone-site` (that's an orphaned snapshot). My CLAUDE.md in brownstone-site has full context about the site, rules, and workflow.
+
+### Which repo to use and why
+- `brownstonehvac-gif/brownstone-boost-design` = LIVE site (Lovable → this repo → Netlify → brownstoneheatingandairconditioning.com). Use this for all edits.
+- `brownstonehvac-gif/brownstone-site` = orphaned snapshot, NOT connected to the live site. Ignore for edits — only useful for CLAUDE.md reference.
+
+### For direct code edits (Claude pushes to GitHub)
+Start the Claude Code session scoped to `brownstone-boost-design`. Claude can then commit and push directly → Netlify auto-deploys.
+Avoid editing in Lovable and Claude at the same time — pick one at a time to avoid conflicts.
+- Use Claude for: SEO fixes, schema updates, meta tags, code-level changes
+- Use Lovable for: visual/design/layout changes
