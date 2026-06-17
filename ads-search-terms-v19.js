@@ -1,10 +1,10 @@
 // ════════════════════════════════════════════════════════════════════════════
-//  BROWNSTONE — Daily Search Term Report  v19
-//  Key fixes vs v18:
-//  - Queries ALL search campaigns (no campaign ID filter — was the missing-terms bug)
-//  - Auto-discovers all active campaigns for adding negatives
-//  - Massively expanded ALWAYS_BLOCK list
-//  - Lowered cost-flag threshold to $2
+//  BROWNSTONE — Daily Search Term Report  v20
+//  Fixes vs v19:
+//  - Removed 'heating co','air co','cooling co' from ENTITY_PHRASES — these
+//    matched substrings like "air conditioning" and blocked valid HVAC terms
+//  - Added Spanish HVAC terms to safelist (aire acondicionado, etc.)
+//  - Added 'climate control solutions' to competitor names
 // ════════════════════════════════════════════════════════════════════════════
 
 var CONFIG = {
@@ -31,7 +31,9 @@ var CONFIG = {
     'emergency','no heat','not cooling','not heating',
     'smart thermostat','thermostat install',
     'maintenance plan','tune up',
-    'how much','cost','price','financing','tax credit'
+    'how much','cost','price','financing','tax credit',
+    'aire acondicionado','calefaccion','calefacci','climatizacion','reparacion ac',
+    'aire acondicionado brooklyn','reparar aire'
   ],
 
   ALWAYS_BLOCK_KEYWORDS: [
@@ -128,10 +130,11 @@ var CONFIG = {
     'city air conditioning','first air hvac','ultimate air',
     'green city mechanical','precision air','reliable air',
     'top air','star air','super cool','cool master',
+    'climate control solutions','climate control nyc','climate control brooklyn',
   ],
 
   ENTITY_TOKENS:   ['inc','llc','corp','corporation','ltd','llp','pllc'],
-  ENTITY_PHRASES:  ['& sons','and sons','& son','heating co','air co','cooling co'],
+  ENTITY_PHRASES:  ['& sons','and sons','& son'],
   SERVICED_BRANDS: ['carrier','fujitsu','mitsubishi','daikin'],
   GENERIC_LEAD: [
     'near me','repair','service','best','top','24','hour','emergency',
