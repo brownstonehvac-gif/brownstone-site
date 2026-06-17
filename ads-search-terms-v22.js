@@ -1,10 +1,11 @@
 // ════════════════════════════════════════════════════════════════════════════
 //  BROWNSTONE — Daily Search Term Report  v22
 //  Key fixes vs v21:
-//  - btn() now uses a single ?q= parameter instead of ?action=X&term=Y&secret=Z
-//    Gmail rewrites email links through www.google.com/url?q=..., which can
-//    mangle URLs that have multiple & parameters. Single-param format avoids this.
-//  - Apps Script doGet must be updated to parse the new ?q= format (see below).
+//  - btn() uses &amp; instead of & in href attributes — Gmail rewrites links
+//    through www.google.com/url?q=... and bare & can cause parameters to be
+//    dropped. &amp; is the correct HTML encoding and prevents this.
+//  - WEBAPP_URL is the current live deployment (AKfycbwCcJ4...)
+//  - No Apps Script changes needed — same ?action=&term=&secret= format.
 // ════════════════════════════════════════════════════════════════════════════
 
 var CONFIG = {
