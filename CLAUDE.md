@@ -216,7 +216,7 @@ The `_redirects` file is for legacy URL cleanup only. Always use **forced** `301
 
 ## Sitemap conventions
 
-`sitemap.xml` currently lists 28 URLs. When adding a new page:
+`sitemap.xml` currently lists 21 URLs. When adding a new page:
 1. Add it to `sitemap.xml` with appropriate `<priority>` and `<changefreq>`
 2. Use trailing slashes on all URLs: `https://brownstoneheatingac.com/page-slug/`
 3. Priority guide: homepage = `1.0`, service pages = `0.8–0.9`, blog = `0.7`, utility pages = `0.5`
@@ -254,3 +254,86 @@ Key images: `hero-hvac`, `brooklyn-rooftops`, `brooklyn-team`, `brooklyn-rooftop
 - Service page titles follow pattern: `[Service] Brooklyn | Brownstone Heating & Air`
 - Never change the domain: `brownstoneheatingac.com`
 - robots.txt: `Disallow:` is empty (all pages crawlable)
+
+---
+
+## Lovable workflow (how site content actually changes)
+
+This repo contains **only the compiled output** — there are no editable React components here. All UI/content changes happen in the Lovable project (separate tool), which then rebuilds and exports to this repo.
+
+**Two types of changes and where to make them:**
+
+| Change type | Where to do it |
+|---|---|
+| UI layout, copy, colors, components | Lovable project → rebuild → export new bundle |
+| HTML meta tags, canonical, OG tags | Directly edit the relevant `index.html` here |
+| Schema.org markup | Directly edit the relevant `index.html` here |
+| Redirect rules | Edit `_redirects` here |
+| Sitemap | Edit `sitemap.xml` here |
+| Google Ads script | Edit `ads-search-terms-v18.js` here, upload manually to Google Ads |
+
+**When Lovable rebuilds and exports:**
+- The JS bundle (`assets/index-*.js`) and CSS bundle (`assets/index-*.css`) get new content-hashed filenames
+- Every `index.html` must be updated to reference the new filenames
+- Images may also get new hashed filenames — update references accordingly
+
+**Never try to edit the minified JS/CSS bundles directly** — they are compiled output and any manual edits will be overwritten on the next Lovable export.
+
+---
+
+## Page meta reference
+
+All 15 deployed pages with their current titles and descriptions:
+
+| Slug | Title | Description |
+|---|---|---|
+| `/` | AC Repair Brooklyn \| Brownstone Heating & Air | Brooklyn HVAC company doing AC repair, heating service, and ductless mini split work — same-day appointments when we can. |
+| `/about/` | Brooklyn HVAC Company \| Brownstone Heating & Air | Brownstone Heating & Air Conditioning is a Brooklyn HVAC company providing AC repair, heating service, and ductless mini split work. |
+| `/contact/` | Contact Brooklyn HVAC \| Same-Day Service | Contact Brooklyn HVAC for AC repair, heating service, mini split repair, and same-day HVAC scheduling across Brooklyn. |
+| `/ac-repair-brooklyn/` | AC Repair Brooklyn \| Same-Day Air Conditioning Service | AC Repair Brooklyn for systems not cooling, leaking, weak airflow, or short-cycling. Same-day appointments when we can fit you in. |
+| `/hvac-repair-brooklyn/` | HVAC Repair Brooklyn \| Heating & Cooling Service | HVAC Repair Brooklyn for heating, cooling, airflow, thermostat, and system problems. Same-day appointments when available. |
+| `/central-air-repair-brooklyn/` | Central Air Repair Brooklyn \| Brownstone Heating & Air | Central air conditioning repair in Brooklyn. Brownstone Heating & Air fixes central AC systems — no cooling, refrigerant leaks, frozen coils, and more. Same-day service. Call (347) 997-3360. |
+| `/emergency-ac-repair-brooklyn/` | Emergency AC Repair Brooklyn \| Same-Day Service | Emergency AC Repair Brooklyn for no cooling, warm air, leaks, or sudden breakdowns. Urgent HVAC response when the system just quit. |
+| `/heat-pump-repair-brooklyn/` | Heat Pump Repair Brooklyn \| Brownstone Heating & Air | Heat pump repair in Brooklyn. Brownstone Heating & Air diagnoses and fixes heat pumps that aren't heating, not cooling, or making noise. All brands. Call (347) 997-3360. |
+| `/mini-split-repair-brooklyn/` | Mini Split Repair Brooklyn \| Ductless AC Service | Mini Split Repair Brooklyn for ductless systems not cooling, leaking, showing errors, or failing in one room. Same-day service when available. |
+| `/fujitsu-mini-split-repair-brooklyn/` | Fujitsu Mini Split Repair Brooklyn \| Certified Service | Fujitsu Mini Split Repair Brooklyn for ductless errors, leaks, weak cooling, branch box issues, and Airstage diagnostics. |
+| `/hvac-heating-ac-upgrades-replacement-brooklyn/` | HVAC Replacement Brooklyn \| Heating & AC Upgrades | Brooklyn HVAC system upgrades and replacement — central AC, ducted & ductless mini splits, gas furnaces, hydronic boilers, low-temp heat pumps. Honest assessment, transparent quotes, $0 down financing available. |
+| `/financing-brooklyn/` | HVAC Financing Brooklyn \| $0 Down, 18-Mo 0% APR Available | Affordable HVAC financing in Brooklyn through Wisetack. $0 down, soft credit check, 18-month 0% APR available. Prequalify in seconds — no impact to your credit score. |
+| `/reviews/` | Brooklyn HVAC Reviews \| Brownstone Heating & Air | Read Brooklyn HVAC reviews from customers who called Brownstone Heating & Air Conditioning for AC repair, heating, and mini split service. |
+| `/privacy-policy/` | Privacy Policy \| Brownstone Heating & Air Brooklyn | Privacy Policy for Brownstone Heating & Air Conditioning, including contact forms, SMS consent, and customer information handling. |
+| `/terms/` | Terms of Service \| Brownstone Heating & Air Brooklyn | Service terms for Brownstone Heating & Air Conditioning, including scheduling, communication, estimates, and customer responsibilities. |
+
+---
+
+## In-flight work (not yet deployed)
+
+These blog pages are in the sitemap and being built in Lovable. Their directories do not exist in this repo yet — they will be added when Lovable exports them.
+
+| Slug | Status |
+|---|---|
+| `/blog/` | In Lovable — not deployed |
+| `/blog/ac-repair-cost-brooklyn/` | In Lovable — not deployed |
+| `/blog/mini-split-vs-central-air-brooklyn-brownstone/` | In Lovable — not deployed |
+| `/blog/signs-ac-needs-repair-brooklyn/` | In Lovable — not deployed |
+| `/blog/heat-pump-rebates-nyc-2026/` | In Lovable — not deployed |
+| `/blog/mini-split-installation-brooklyn-brownstone/` | In Lovable — not deployed |
+
+When Lovable exports these pages, create the directory and `index.html` for each, add them to `sitemap.xml`, and update `<lastmod>` on the blog index entry.
+
+---
+
+## Connected MCP tools
+
+These integrations are available in Claude Code sessions and can be called directly:
+
+| Tool | What it's for |
+|---|---|
+| **HubSpot** | CRM — view contacts, deals, pipeline, company data |
+| **Netlify** | Deploy status, site config, environment variables |
+| **Quo** | Phone inbox — read call transcripts, SMS messages, missed calls, contacts |
+| **Gmail** | Search email threads, create drafts, manage labels |
+| **Google Drive** | Read/write files in Drive (SOPs, docs, sheets) |
+| **Canva** | Generate or edit marketing designs |
+| **GitHub** | Repo management, PRs, issues (scoped to this repo) |
+| **Ahrefs** | SEO data — trial membership, use sparingly, not for large bulk scans |
+| **Semrush** | SEO data — trial membership, use sparingly, not for large bulk scans |
