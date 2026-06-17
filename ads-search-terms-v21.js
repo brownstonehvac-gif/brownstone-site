@@ -12,7 +12,7 @@ var CONFIG = {
   MIN_COST_TO_FLAG:  2.00,
   DAYS_TO_LOOK_BACK: 30,
 
-  WEBAPP_URL:    'https://script.google.com/macros/s/AKfycbzt9WbmmDdaRYWizz3NJlgmqbuO7buUFDS0yBveuooHO26q5KpwB9WgioUbgvegjou9aA/exec',
+  WEBAPP_URL:    'https://script.google.com/macros/s/AKfycbwCcJ4IHSpCGbuyAcRF-ydFjn9bioFAkhbNTN8hfe4NYKA73lbYfkDpUXTSmUvUNM4b/exec',
   WEBAPP_SECRET: 'BSTONE2026',
 
   MANUAL_KEEP:  [],
