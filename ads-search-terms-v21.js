@@ -1,10 +1,10 @@
 // ════════════════════════════════════════════════════════════════════════════
-//  BROWNSTONE — Daily Search Term Report  v20
-//  Fixes vs v19:
-//  - Removed 'heating co','air co','cooling co' from ENTITY_PHRASES — these
-//    matched substrings like "air conditioning" and blocked valid HVAC terms
-//  - Added Spanish HVAC terms to safelist (aire acondicionado, etc.)
-//  - Added 'climate control solutions' to competitor names
+//  BROWNSTONE — Daily Search Term Report  v21
+//  Key fixes vs v20:
+//  - GAQL query has NO campaign filter at all (search_term_view is search-only anyway)
+//  - Already-blocked terms that fired yesterday are now IN the main table (not hidden
+//    in a collapsible) — you now see 100% of what fired that day in one flat list
+//  - Yesterday section header shows: "X total (Y new, Z already blocked)"
 // ════════════════════════════════════════════════════════════════════════════
 
 var CONFIG = {
@@ -37,16 +37,11 @@ var CONFIG = {
   ],
 
   ALWAYS_BLOCK_KEYWORDS: [
-    // Big box / retail
     'costco','home depot','lowes',"lowe's",'amazon','walmart','target',
     'best buy','wayfair','ace hardware','menards','northern tool',
-
-    // DIY / content / research
     'how to','diy','do it yourself','youtube','video tutorial',
     'reddit','forum','community','blog','step by step','instructions',
     'troubleshoot yourself','fix myself','fix it myself',
-
-    // Product / parts (not service)
     'tech support','technical support','service manual','warranty claim',
     'parts lookup','parts store','distributor','supplier','wholesale',
     'for sale','serial number','model number','part number','error code',
@@ -57,33 +52,23 @@ var CONFIG = {
     'ton unit','ac size','sizing calculator','sizing guide','size calculator',
     'thermostat wiring','nest price','ecobee price','honeywell thermostat',
     'capacitor replacement','contactor replacement','hvac parts',
-
-    // Out-of-area geography (non-Brooklyn NYC boroughs & suburbs)
     'long island city','long island','nassau county','suffolk county',
     'jersey city','hoboken','newark','new jersey',' nj ',
     'westchester','yonkers','mount vernon','white plains','new rochelle',
     'connecticut',' ct ',' li ','hempstead','great neck','valley stream',
     'garden city','levittown','hicksville',
-
-    // Employment / training
     'hiring','jobs','career','employment','salary','wages','hourly pay',
     'apprentice','training','school','certification','certificate',
     'hvac school','hvac class','hvac training','hvac program',
     'hvac certification','epa 608','nate cert','hvac license',
-
-    // Lead aggregators / directories
     'yelp','angi','thumbtack','homeadvisor','angies list',
     'networx','porch','houzz','taskrabbit','task rabbit',
     'buildzoom','build zoom','bark.com','bob vila','this old house',
-
-    // Gov / regulatory / free programs
     'permit','building permit','hvac permit','rebate','tax rebate',
     'energy star','what is hvac','hvac meaning','hvac definition','hvac acronym',
     '311','nyc hpd','hpd violation','dob permit','nyc dob','dob inspection',
     'free air conditioner','free ac','free cooling','nyc free cooling',
     'section 8','nycha','housing authority','low income assistance',
-
-    // Portable / window / through-wall units (not what we service)
     'portable ac','portable air conditioner','portable unit',
     'portable cooler','portable cooling','portable heat',
     'window ac','window unit','window air conditioner',
@@ -92,15 +77,11 @@ var CONFIG = {
     'floor ac','freestanding ac','tower fan','tower cooler',
     'through the wall ac','thru wall ac','swamp cooler','evaporative cooler',
     'wall sleeve','wall ac sleeve',
-
-    // Brand / product search (not service requests)
     'goodman','rheem','york hvac','lennox','trane','bryant hvac',
     'carrier northeast','abco','comfort maker','icp hvac',
     'mitsubishi parts','fujitsu parts','lg ac','samsung ac',
     'friedrich hvac','bosch heat pump','amana hvac','heil hvac',
     'ruud ac','nordyne','westinghouse ac',
-
-    // Unrelated trades
     'plumber','plumbing','electrician','electrical repair',
     'handyman','roofer','roofing','pest control','exterminator',
     'locksmith','moving company','movers','cleaning service',
@@ -167,7 +148,6 @@ function getAllActiveCampaignIds() {
   } catch(e) {
     Logger.log('Campaign discovery error: ' + e);
   }
-  // Fallback to hardcoded IDs if discovery fails or returns nothing
   return ids.length > 0 ? ids : [23097095929, 23064032078];
 }
 
@@ -179,23 +159,19 @@ function getAllActiveCampaignIds() {
 function processWebAppCommands(ex, campaignIds) {
   var keepSet = {};
   var processed = 0;
-
   try {
     var keepResp = UrlFetchApp.fetch(CONFIG.WEBAPP_URL + '?action=getkeeps',
       { muteHttpExceptions: true });
     if (keepResp.getResponseCode() === 200) {
       var keeps = JSON.parse(keepResp.getContentText());
       for (var k in keeps) { if (keeps.hasOwnProperty(k)) keepSet[k] = true; }
-      Logger.log('Permanent keeps loaded: ' + JSON.stringify(keepSet));
     }
-
     var resp = UrlFetchApp.fetch(CONFIG.WEBAPP_URL + '?action=list',
       { muteHttpExceptions: true });
     if (resp.getResponseCode() === 200) {
       var commands = JSON.parse(resp.getContentText());
       if (commands && commands.length > 0) {
         processed = commands.length;
-        Logger.log('Processing ' + commands.length + ' queued command(s)');
         for (var i = 0; i < commands.length; i++) {
           var c = commands[i];
           var t = (c.t || '').toLowerCase().trim();
@@ -203,8 +179,7 @@ function processWebAppCommands(ex, campaignIds) {
           if (c.a === 'block')   { delete keepSet[t]; blockTermAllCampaigns(t, ex, campaignIds); }
           if (c.a === 'unblock') { removeNegAllCampaigns(t, campaignIds); }
         }
-        UrlFetchApp.fetch(
-          CONFIG.WEBAPP_URL + '?action=clear&secret=' + CONFIG.WEBAPP_SECRET,
+        UrlFetchApp.fetch(CONFIG.WEBAPP_URL + '?action=clear&secret=' + CONFIG.WEBAPP_SECRET,
           { muteHttpExceptions: true });
       }
     }
@@ -320,9 +295,7 @@ function classifyTerm(term, totalCost, totalConv, ex, counters, keepSet, campaig
     blockTermAllCampaigns(term, ex, campaignIds); counters.blocked++;
     return { tag: 'block', reason: 'Manual block' };
   }
-
   var tag = 'clean', reason = '';
-
   if (inSafelist(term)) {
     if (totalCost >= CONFIG.MIN_COST_TO_FLAG && totalConv === 0) {
       tag = 'review'; reason = 'Service term — $'+totalCost.toFixed(2)+' spent, no conv yet';
@@ -368,21 +341,19 @@ function main() {
   var start30   = new Date(today); start30.setDate(today.getDate() - CONFIG.DAYS_TO_LOOK_BACK);
   var yStr      = fmtDash(yesterday);
 
-  // Discover all active campaigns at runtime — no more hardcoded ID filter
   var campaignIds = getAllActiveCampaignIds();
-
-  var ex         = getExistingNegatives(campaignIds);
-  var webResult  = processWebAppCommands(ex, campaignIds);
-  var keepSet    = webResult.keepSet;
-  var counters   = { blocked:0, review:0, alreadyBlocked:0, checked:0, processed: webResult.processed };
+  var ex          = getExistingNegatives(campaignIds);
+  var webResult   = processWebAppCommands(ex, campaignIds);
+  var keepSet     = webResult.keepSet;
+  var counters    = { blocked:0, review:0, alreadyBlocked:0, checked:0, processed: webResult.processed };
   var allMap = {}, yMap = {}, yExcluded = {};
 
-  // KEY FIX: No campaign.id filter — captures ALL search campaigns in the account
+  // No campaign filter — search_term_view is search-only by nature; any filter
+  // risks silently dropping terms from campaigns with non-standard channel types
   var q = 'SELECT search_term_view.search_term, metrics.cost_micros, metrics.clicks, '
-    + 'metrics.conversions, campaign.id, search_term_view.status, segments.date '
+    + 'metrics.conversions, search_term_view.status, segments.date '
     + 'FROM search_term_view '
-    + 'WHERE segments.date BETWEEN "' + fmtDash(start30) + '" AND "' + yStr + '" '
-    + 'AND campaign.advertising_channel_type = "SEARCH"';
+    + 'WHERE segments.date BETWEEN "' + fmtDash(start30) + '" AND "' + yStr + '"';
 
   var res = AdsApp.search(q);
   while (res.hasNext()) {
@@ -397,9 +368,12 @@ function main() {
 
     if (status === 'EXCLUDED') {
       counters.alreadyBlocked++;
+      // Track already-blocked terms that fired yesterday — shown inline in main table
       if (rDate === yStr) {
         if (!yExcluded[term]) yExcluded[term] = { term:term, cost:0, clicks:0, conv:0 };
-        yExcluded[term].cost += cost; yExcluded[term].clicks += clicks; yExcluded[term].conv += conv;
+        yExcluded[term].cost  += cost;
+        yExcluded[term].clicks += clicks;
+        yExcluded[term].conv  += conv;
       }
       continue;
     }
@@ -412,6 +386,7 @@ function main() {
     }
   }
 
+  // Classify non-excluded terms
   for (var t in allMap) {
     if (!allMap.hasOwnProperty(t)) continue;
     var entry = allMap[t];
@@ -420,13 +395,26 @@ function main() {
     if (yMap[t]) { yMap[t].tag = cls.tag; yMap[t].reason = cls.reason; }
   }
 
-  var thirtyDayList  = sortedArray(allMap);
-  var yesterdayList  = sortedArray(yMap);
-  var yExcludedList  = sortedArray(yExcluded);
-  Logger.log('Campaigns: '+campaignIds.length+' | Checked: '+counters.checked
-    +' | New blocks: '+counters.blocked+' | Review: '+counters.review
-    +' | Already blocked: '+counters.alreadyBlocked);
-  sendReport(counters, today, yesterday, yesterdayList, thirtyDayList, ex, yExcludedList, campaignIds.length);
+  var thirtyDayList = sortedArray(allMap);
+
+  // Build yesterday list: new terms first (sorted by cost), then already-blocked (sorted by cost)
+  var newTermsArr      = sortedArray(yMap);
+  var alreadyBlockedArr = sortedArray(yExcluded);
+  for (var ai = 0; ai < alreadyBlockedArr.length; ai++) {
+    alreadyBlockedArr[ai].tag    = 'already_blocked';
+    alreadyBlockedArr[ai].reason = 'Already in your negative keyword list';
+  }
+  // Combine: new terms on top, already-blocked below
+  var yesterdayList = newTermsArr.concat(alreadyBlockedArr);
+
+  Logger.log('Campaigns: '+campaignIds.length+' | Rows checked: '+counters.checked
+    +' | New auto-blocks today: '+counters.blocked+' | Flagged for review: '+counters.review
+    +' | Already-blocked (in list): '+counters.alreadyBlocked
+    +' | Yesterday new terms: '+newTermsArr.length
+    +' | Yesterday already-blocked: '+alreadyBlockedArr.length);
+
+  sendReport(counters, today, yesterday, yesterdayList, newTermsArr.length, alreadyBlockedArr.length,
+             thirtyDayList, ex, campaignIds.length);
 }
 
 function sortedArray(map) {
@@ -441,17 +429,22 @@ function sortedArray(map) {
 //  EMAIL
 // ════════════════════════════════════════════════════════════════════════════
 
-function sendReport(counters, today, yesterday, yesterdayList, thirtyDayList, ex, yExcludedList, numCampaigns) {
+function sendReport(counters, today, yesterday, yesterdayList, newCount, blockedCount,
+                    thirtyDayList, ex, numCampaigns) {
 
   function badge(tag) {
     if (tag === 'block')
-      return '<span style="background:#fee2e2;color:#b91c1c;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:bold">BLOCKED</span>';
+      return '<span style="background:#fee2e2;color:#b91c1c;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:bold">AUTO-BLOCKED</span>';
+    if (tag === 'already_blocked')
+      return '<span style="background:#f3f4f6;color:#6b7280;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:bold">🚫 ALREADY BLOCKED</span>';
     if (tag === 'review')
       return '<span style="background:#fef3c7;color:#92400e;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:bold">⚠ REVIEW</span>';
     return '<span style="background:#dcfce7;color:#166534;padding:1px 8px;border-radius:3px;font-size:11px">OK</span>';
   }
 
   function actionCell(r) {
+    if (r.tag === 'already_blocked')
+      return badge(r.tag) + '<br>' + btn('↩ Unblock', r.term, 'unblock', '#6b7280');
     if (r.tag === 'block')
       return badge(r.tag) + '<br>' + btn('↩ Undo Block', r.term, 'unblock', '#6b7280');
     if (r.tag === 'review')
@@ -463,42 +456,32 @@ function sendReport(counters, today, yesterday, yesterdayList, thirtyDayList, ex
 
   function buildTable(list, fs) {
     if (!list.length) return '<p style="color:#888;font-style:italic">No terms.</p>';
-    var h = '<table border="1" cellpadding="7" cellspacing="0" style="border-collapse:collapse;font-size:'+fs+';width:100%;table-layout:fixed">'
-      + '<colgroup><col style="width:38%"><col style="width:8%"><col style="width:11%"><col style="width:7%"><col style="width:36%"></colgroup>'
-      + '<tr style="background:#e5e7eb"><th>Search Term</th><th>Clicks</th><th>Cost</th><th>Conv</th><th>Action</th></tr>';
+    var h = '<table border="1" cellpadding="7" cellspacing="0" '
+      + 'style="border-collapse:collapse;font-size:'+fs+';width:100%;table-layout:fixed">'
+      + '<colgroup><col style="width:38%"><col style="width:8%"><col style="width:11%">'
+      + '<col style="width:7%"><col style="width:36%"></colgroup>'
+      + '<tr style="background:#e5e7eb"><th>Search Term</th><th>Clicks</th>'
+      + '<th>Cost</th><th>Conv</th><th>Status / Action</th></tr>';
     for (var i = 0; i < list.length; i++) {
       var r  = list[i];
-      var bg = r.tag==='block'?'#fff5f5':r.tag==='review'?'#fffbeb':'#ffffff';
-      var nt = r.reason ? '<br><span style="color:#999;font-size:10px">'+r.reason+'</span>' : '';
+      var bg = r.tag === 'block'          ? '#fff5f5'
+             : r.tag === 'already_blocked'? '#f9fafb'
+             : r.tag === 'review'         ? '#fffbeb'
+             : '#ffffff';
+      var termStyle = r.tag === 'already_blocked'
+        ? 'color:#9ca3af;text-decoration:line-through'
+        : '';
+      var nt = r.reason
+        ? '<br><span style="color:#999;font-size:10px">'+r.reason+'</span>'
+        : '';
       h += '<tr style="background:'+bg+';vertical-align:top">'
-        +'<td>'+r.term+nt+'</td><td>'+r.clicks+'</td><td>$'+r.cost.toFixed(2)+'</td>'
-        +'<td>'+r.conv+'</td><td>'+actionCell(r)+'</td></tr>';
+        + '<td style="'+termStyle+'">'+r.term+nt+'</td>'
+        + '<td>'+r.clicks+'</td>'
+        + '<td>$'+r.cost.toFixed(2)+'</td>'
+        + '<td>'+r.conv+'</td>'
+        + '<td>'+actionCell(r)+'</td></tr>';
     }
     return h + '</table>';
-  }
-
-  var yExcHtml = '';
-  if (yExcludedList && yExcludedList.length) {
-    var exRows = '';
-    for (var ei = 0; ei < yExcludedList.length; ei++) {
-      var er = yExcludedList[ei];
-      var rowBg = ei % 2 === 0 ? '#fff5f5' : '#fef2f2';
-      exRows += '<tr style="background:'+rowBg+'">'
-        + '<td style="padding:4px 7px;color:#6b7280">🚫 '+er.term+'</td>'
-        + '<td style="padding:4px 7px;text-align:center">'+er.clicks+'</td>'
-        + '<td style="padding:4px 7px;text-align:center">$'+er.cost.toFixed(2)+'</td>'
-        + '<td style="padding:4px 7px;text-align:center">'+er.conv+'</td>'
-        + '<td style="padding:4px 7px">'+btn('↩ Unblock', er.term, 'unblock', '#6b7280')+'</td></tr>';
-    }
-    yExcHtml = '<details style="margin-top:10px">'
-      + '<summary style="color:#6b7280;font-size:12px;cursor:pointer;user-select:none">'
-      + '🚫 '+yExcludedList.length+' already-blocked term(s) also fired yesterday — click to expand</summary>'
-      + '<table border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;width:100%;margin-top:6px;table-layout:fixed">'
-      + '<colgroup><col style="width:40%"><col style="width:10%"><col style="width:12%"><col style="width:8%"><col style="width:30%"></colgroup>'
-      + '<tr style="background:#f3f4f6"><th style="padding:4px 7px;text-align:left">Term</th>'
-      + '<th style="padding:4px 7px">Clicks</th><th style="padding:4px 7px">Cost</th>'
-      + '<th style="padding:4px 7px">Conv</th><th style="padding:4px 7px;text-align:left">Action</th></tr>'
-      + exRows + '</table></details>';
   }
 
   var processedNote = counters.processed > 0
@@ -513,7 +496,7 @@ function sendReport(counters, today, yesterday, yesterdayList, thirtyDayList, ex
 
   var negRows = '';
   for (var ni = 0; ni < negTerms.length; ni++) {
-    var nt2 = negTerms[ni];
+    var nt2    = negTerms[ni];
     var rowBg2 = ni % 2 === 0 ? '#ffffff' : '#f9fafb';
     negRows += '<tr style="background:'+rowBg2+'">'
       + '<td style="padding:6px 8px;font-size:12px;color:#374151">🚫 '+nt2+'</td>'
@@ -523,42 +506,56 @@ function sendReport(counters, today, yesterday, yesterdayList, thirtyDayList, ex
   var negHtml = '<hr style="border:none;border-top:2px solid #e5e7eb;margin:24px 0 12px">'
     + '<h3 style="margin-bottom:4px">🚫 All Blocked Keywords ('+negTerms.length+' total)</h3>'
     + '<p style="color:#666;font-size:12px;margin:0 0 10px">Click <b>↩ Remove</b> to unblock a term.</p>'
-    + '<table border="1" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;table-layout:fixed">'
+    + '<table border="1" cellpadding="0" cellspacing="0" '
+    + 'style="border-collapse:collapse;width:100%;table-layout:fixed">'
     + '<colgroup><col style="width:72%"><col style="width:28%"></colgroup>'
-    + '<tr style="background:#e5e7eb"><th style="padding:6px 8px;text-align:left;font-size:12px">Blocked Term</th>'
+    + '<tr style="background:#e5e7eb">'
+    + '<th style="padding:6px 8px;text-align:left;font-size:12px">Blocked Term</th>'
     + '<th style="padding:6px 8px;text-align:left;font-size:12px">Action</th></tr>'
     + negRows + '</table>';
 
-  var yLabel = yesterdayList.length + ' new term' + (yesterdayList.length !== 1 ? 's' : '');
-  if (yExcludedList && yExcludedList.length) {
-    yLabel += ' · ' + yExcludedList.length + ' already blocked also fired';
-  }
+  var total  = newCount + blockedCount;
+  var yLabel = total + ' total'
+    + ' (' + newCount + ' new'
+    + (blockedCount > 0 ? ', ' + blockedCount + ' already blocked' : '')
+    + ')';
 
   var yHtml = yesterdayList.length === 0
-    ? '<p style="color:#888;font-style:italic">No new terms for '+formatDate(yesterday)+' yet — usually ready next morning.</p>'
+    ? '<p style="color:#888;font-style:italic">No terms for '
+      + formatDate(yesterday) + ' yet — data is usually ready by 8am next morning.</p>'
     : buildTable(yesterdayList, '13px');
 
   var body = '<div style="font-family:sans-serif;max-width:700px;color:#111">'
     + '<h2 style="color:#b91c1c;margin-bottom:4px">Brownstone HVAC — Daily Search Terms</h2>'
     + '<p style="margin-top:0;color:#555;font-size:13px"><b>'+formatDate(today)+'</b>'
-    + ' &nbsp;|&nbsp; Campaigns scanned: <b>'+numCampaigns+'</b>'
-    + ' &nbsp;|&nbsp; Auto-blocked: <b>'+counters.blocked+'</b>'
+    + ' &nbsp;|&nbsp; Campaigns: <b>'+numCampaigns+'</b>'
+    + ' &nbsp;|&nbsp; Auto-blocked today: <b>'+counters.blocked+'</b>'
     + ' &nbsp;|&nbsp; Flagged: <b>'+counters.review+'</b>'
-    + ' &nbsp;|&nbsp; Total blocked: <b>'+negTerms.length+'</b></p>'
-    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 16px;margin:14px 0;font-size:12px;color:#14532d">'
-    + '✅ <b>One-click mode active.</b> Approved terms are saved permanently — they will never come back to review.'
-    + '<br><span style="color:#166534;opacity:0.75">Button actions (Block / Keep) are applied in the <b>next morning\'s report</b>.</span></div>'
+    + ' &nbsp;|&nbsp; Total negatives: <b>'+negTerms.length+'</b></p>'
+    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;'
+    + 'padding:10px 16px;margin:14px 0;font-size:12px;color:#14532d">'
+    + '✅ <b>One-click mode active.</b> Approved terms are saved permanently.'
+    + '<br><span style="opacity:0.75">Button actions are applied in the '
+    + '<b>next morning\'s report</b>.</span></div>'
     + processedNote
     + '<hr style="border:none;border-top:2px solid #e5e7eb;margin:16px 0 12px">'
-    + '<h3 style="margin-bottom:6px">📋 Yesterday — '+formatDate(yesterday)+' ('+yLabel+')</h3>'
+    + '<h3 style="margin-bottom:2px">📋 Yesterday — '+formatDate(yesterday)
+    + ' &nbsp;<span style="font-weight:normal;font-size:13px;color:#555">('+yLabel+')</span></h3>'
+    + '<p style="color:#888;font-size:11px;margin:0 0 8px">Strikethrough rows = '
+    + 'already in your negative list (firing but blocked). '
+    + 'Compare this total count to Google Ads → Search Terms to verify coverage.</p>'
     + yHtml
-    + yExcHtml
     + '<hr style="border:none;border-top:2px solid #e5e7eb;margin:24px 0 12px">'
-    + '<h3 style="margin-bottom:6px">📊 Last 30 Days ('+thirtyDayList.length+' terms, sorted by cost)</h3>'
+    + '<h3 style="margin-bottom:6px">📊 Last 30 Days ('
+    + thirtyDayList.length+' terms, sorted by cost)</h3>'
     + buildTable(thirtyDayList, '12px')
     + negHtml
-    + '<p style="color:#bbb;font-size:11px;margin-top:20px">v19 — Brownstone HVAC</p></div>';
+    + '<p style="color:#bbb;font-size:11px;margin-top:20px">v21 — Brownstone HVAC</p></div>';
 
-  MailApp.sendEmail({ to: CONFIG.EMAIL, subject: 'Brownstone Search Terms — '+formatDate(today), htmlBody: body });
+  MailApp.sendEmail({
+    to:       CONFIG.EMAIL,
+    subject:  'Brownstone Search Terms — ' + formatDate(today),
+    htmlBody: body
+  });
   Logger.log('Email sent.');
 }
