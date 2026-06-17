@@ -234,9 +234,12 @@ function fmtDash(d) {
 }
 
 function btn(label, term, action, bg) {
-  // Single ?q= param — avoids & characters in href which Gmail can mangle
-  // when rewriting links through www.google.com/url?q=...
-  var url = CONFIG.WEBAPP_URL + '?q=' + encodeURIComponent(action + '|' + term + '|' + CONFIG.WEBAPP_SECRET);
+  // Use &amp; not & in href — correct HTML encoding prevents Gmail from
+  // misreading parameters as HTML entities when rewriting email links
+  var url = CONFIG.WEBAPP_URL
+    + '?action=' + action
+    + '&amp;term=' + encodeURIComponent(term)
+    + '&amp;secret=' + encodeURIComponent(CONFIG.WEBAPP_SECRET);
   return '<a href="' + url + '" target="_blank" style="display:inline-block;padding:5px 11px;'
     + 'background:' + bg + ';color:#fff;border-radius:4px;text-decoration:none;'
     + 'font-size:12px;font-weight:bold;margin:2px 2px 0 0">' + label + '</a>';
