@@ -26,3 +26,8 @@
 /privacy-policy-2/    /privacy-policy/           301!
 /emergency-ac-brooklyn     /emergency-ac-repair-brooklyn/  301!
 /emergency-ac-brooklyn/    /emergency-ac-repair-brooklyn/  301!
+
+# Google Ads command hub — routes email buttons through brownstoneheatingac.com
+# so Gmail app on iPhone doesn't intercept as a Google-owned domain link.
+# Netlify forwards the query string (?action=&term=&secret=) to the Apps Script.
+/hvac-cmd  https://script.google.com/macros/s/AKfycbzEA4PVOavitth_QrXmecsufVF4ShiULzVHRT3vewCoESSE2-dUzAW03uR_MiQ41hygxg/exec  302
