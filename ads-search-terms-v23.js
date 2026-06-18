@@ -12,7 +12,7 @@ var CONFIG = {
   MIN_COST_TO_FLAG:  2.00,
   DAYS_TO_LOOK_BACK: 30,
 
-  WEBAPP_URL:    'https://brownstoneheatingac.com/hvac-cmd',
+  WEBAPP_URL:    'https://script.google.com/macros/s/AKfycbzEA4PVOavitth_QrXmecsufVF4ShiULzVHRT3vewCoESSE2-dUzAW03uR_MiQ41hygxg/exec',
   WEBAPP_SECRET: 'BSTONE2026',
 
   MANUAL_KEEP:  [],
