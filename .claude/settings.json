@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__0c6c9db7-9918-4c49-953c-a318c523b0cd__data_query",
+      "mcp__0c6c9db7-9918-4c49-953c-a318c523b0cd__data_source_discovery",
+      "mcp__0c6c9db7-9918-4c49-953c-a318c523b0cd__accounts_discovery",
+      "mcp__0c6c9db7-9918-4c49-953c-a318c523b0cd__field_discovery",
+      "mcp__0c6c9db7-9918-4c49-953c-a318c523b0cd__get_async_query_results"
+    ]
+  }
+}
